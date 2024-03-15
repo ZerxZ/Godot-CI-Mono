@@ -32,7 +32,7 @@ jobs:
             tests: true
             # Skip debug symbols, they're way too big with MSVC.
             sconsflags: debug_symbols=no vsproj=yes vsproj_gen_only=no windows_subsystem=console  module_mono_enabled=yes
-            bin: "./bin/godot.windows.editor.x86_64.mono.exe"
+            bin: "./godot/bin/godot.windows.editor.x86_64.mono.exe"
             build-mono: true
 
           - name: Template w/ Mono (target=template_release)
@@ -49,12 +49,7 @@ jobs:
           repository: 'godotengine/godot'
           platform: 'github'
           path: 'godot'
-      - name: Godot Engine Folder
-        run: |
-           Remove-Item ./godot/.git -Force -Recurse
-           Remove-Item ./godot/.github -Force -Recurse
-           Move-Item -Path ./godot/* -Destination ./ -Force
-           
+      
 
       - name: Setup Godot build cache
         uses: ./.github/actions/godot-cache
@@ -72,7 +67,7 @@ jobs:
           dotnet-version: '6.0.x'
 
       - name: Download Direct3D 12 SDK components
-        run: python ./misc/scripts/install_d3d12_sdk_windows.py
+        run: python ./godot/misc/scripts/install_d3d12_sdk_windows.py
 
       - name: Setup MSVC problem matcher
         uses: ammaraskar/msvc-problem-matcher@master
