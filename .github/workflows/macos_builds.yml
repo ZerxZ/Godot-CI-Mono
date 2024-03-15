@@ -24,26 +24,28 @@ jobs:
             cache-name: macos-editor
             target: editor
             tests: true
-            bin: "./bin/godot.macos.editor.x86_64"
-
-          - name: Template (target=template_release)
-            cache-name: macos-template
-            target: template_release
-            tests: false
-            sconsflags: debug_symbols=no
+            bin: "./bin/godot.macos.editor.x86_64.mono"
+            build-mono: true
 
     steps:
       - uses: actions/checkout@v4
 
-      - name: Setup Godot build cache
-        uses: ./.github/actions/godot-cache
+      - name: Download Godot
+        uses: actions/download-artifact@v4.1.4
         with:
-          cache-name: ${{ matrix.cache-name }}
-        continue-on-error: true
-
+          name: godot-source
+          path: ./
+      - name: Unzip Godot
+        run: |
+          unzip godot.zip -d ./godot
+          mv godot/* ./
       - name: Setup python and scons
         uses: ./.github/actions/godot-deps
-
+      - name: Set up .NET Sdk
+        uses: actions/setup-dotnet@v3
+        if: ${{ matrix.build-mono }}
+        with:
+          dotnet-version: '6.0.x'
       - name: Setup Vulkan SDK
         run: |
           sh misc/scripts/install_vulkan_sdk_macos.sh
@@ -55,7 +57,15 @@ jobs:
           platform: macos
           target: ${{ matrix.target }}
           tests: ${{ matrix.tests }}
+      - name: Generate C# glue
+        if: ${{ matrix.build-mono }}
+        run: |
+          ${{ matrix.bin }} --headless --generate-mono-glue ./modules/mono/glue
 
+      - name: Build .NET solutions
+        if: ${{ matrix.build-mono }}
+        run: |
+          ./modules/mono/build_scripts/build_assemblies.py --godot-output-dir=./bin --godot-platform=macos
       - name: Prepare artifact
         run: |
           strip bin/godot.*
@@ -73,3 +83,8 @@ jobs:
           ${{ matrix.bin }} --version
           ${{ matrix.bin }} --help
           ${{ matrix.bin }} --test --force-colors
+          
+      - name: .NET source generators tests
+        if: ${{ matrix.build-mono }}
+        run: |
+          dotnet test modules/mono/editor/Godot.NET.Sdk/Godot.SourceGenerators.Tests

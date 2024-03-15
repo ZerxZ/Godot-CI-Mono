@@ -1,8 +1,10 @@
 name: Build Godot Mono Nightly
-on: 
-  workflow_dispatch: 
+on:
+  workflow_dispatch:
   schedule:
     - cron: '15 13 * * *'
+
+permissions: write-all
 
 concurrency:
   group: ci-${{github.actor}}-${{github.head_ref || github.run_number}}-${{github.ref}}-runner
@@ -13,7 +15,7 @@ jobs:
     name: 📦 Download Godot
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4.1.1
       - uses: sudosubin/git-clone-action@v1.0.1
         with:
           repository: 'godotengine/godot'
@@ -23,32 +25,52 @@ jobs:
         run: |
           rm -rf godot/.git
           rm -rf godot/.github
-      - name: zip godot
+      - name: Zip Godot Source Code Folder
         run: |
           cd godot
           zip -r godot.zip .
           mv godot.zip ..
           cd ..
-      - name: Upload Godot
+      - name: Upload Godot Source Code Artifact
         uses: actions/upload-artifact@v2
         with:
           name: godot-source
           path: godot.zip
-    
-
+  
+  
   linux-build:
-    needs:  git-clone
+    needs: git-clone
     name: 🐧 Linux
     uses: ./.github/workflows/linux_builds.yml
-
-#  macos-build:
-#    if: ${{ vars.DISABLE_GODOT_CI == '' }}
-#    name: 🍎 macOS
-#    uses: ./.github/workflows/macos_builds.yml
+  
+  macos-build:
+    needs: git-clone
+    name: 🍎 macOS
+    uses: ./.github/workflows/macos_builds.yml
 
   windows-build:
-    needs:  git-clone
+    needs: git-clone
     name: 🏁 Windows
     uses: ./.github/workflows/windows_builds.yml
   
-
+  release:
+    needs: [ linux-build, windows-build,macos-build ]
+    name: 🚀 Release
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4.1.1
+    - name: Download Godot Artifact
+      uses: actions/download-artifact@v4.1.4
+      with:
+          name: godot-artifact
+          pattern: '*-editor-mono'
+          merge-multiple: true
+    - name: Automatic Releases
+      uses: ncipollo/release-action@v1.14.0
+      with:
+          tag: "pre-latest"
+          prerelease: true
+          name: "Pre-Release ${{ env.RELEASE_VERSION }}"
+          allowUpdates: true
+          artifacts: |
+            *.zip

@@ -39,7 +39,7 @@ jobs:
 
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4.1.1
 
       # Need newer mesa for lavapipe to work properly.
       - name: Linux dependencies for tests
@@ -62,7 +62,7 @@ jobs:
           echo "Disk usage after:" && df -h
 
       - name: Download Godot
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4.1.4
         with:
           name: godot-source
           path: ./
@@ -70,7 +70,7 @@ jobs:
         run: |
           unzip godot.zip -d ./godot
           mv godot/* ./
-          
+
       - name: Setup python and scons
         uses: ./.github/actions/godot-deps
 
