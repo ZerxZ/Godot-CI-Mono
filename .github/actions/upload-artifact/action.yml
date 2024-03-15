@@ -7,7 +7,7 @@ inputs:
   path:
     description: The path to upload.
     required: true
-    default: "godot/bin/*"
+    default: "bin/*"
 runs:
   using: "composite"
   steps:

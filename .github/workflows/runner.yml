@@ -9,9 +9,29 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
- 
+  git-clone:
+    name: 📦 Download Godot
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: sudosubin/git-clone-action@v1.0.1
+        with:
+          repository: 'godotengine/godot'
+          platform: 'github'
+          path: 'godot'
+      - name: Remove Godot .git and .github
+        run: |
+          rm -rf godot/.git
+          rm -rf godot/.github
+      - name: Upload Godot
+        uses: actions/upload-artifact@v2
+        with:
+          name: godot-source
+          path: godot/*
+    
 
   linux-build:
+    needs:  git-clone
     name: 🐧 Linux
     uses: ./.github/workflows/linux_builds.yml
 
@@ -21,7 +41,8 @@ jobs:
 #    uses: ./.github/workflows/macos_builds.yml
 
   windows-build:
+    needs:  git-clone
     name: 🏁 Windows
     uses: ./.github/workflows/windows_builds.yml
-
+  
 

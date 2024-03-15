@@ -27,7 +27,7 @@ jobs:
             cache-name: linux-editor-mono
             target: editor
             sconsflags: module_mono_enabled=yes
-            bin: "./godot/bin/godot.linuxbsd.editor.x86_64.mono"
+            bin: "./bin/godot.linuxbsd.editor.x86_64.mono"
             build-mono: true
             tests: false # Disabled due freeze caused by mix Mono build and CI
             doc-test: true
@@ -36,23 +36,15 @@ jobs:
             artifact: true
 
 
-          - name: Template w/ Mono (target=template_release)
-            cache-name: linux-template-mono
-            target: template_release
-            sconsflags: module_mono_enabled=yes
-            build-mono: false
-            tests: false
-            artifact: true
 
 
     steps:
       - uses: actions/checkout@v4
-      - uses: sudosubin/git-clone-action@v1.0.1
+      - name: Download Godot
+        uses: actions/download-artifact@v3
         with:
-          repository: 'godotengine/godot'
-          platform: 'github'
-          path: 'godot'
-
+          name: godot-source
+          path: ./
       # Need newer mesa for lavapipe to work properly.
       - name: Linux dependencies for tests
         if: ${{ matrix.proj-test }}
@@ -73,11 +65,6 @@ jobs:
           sudo rm -rf /usr/local/lib/android
           echo "Disk usage after:" && df -h
 
-      - name: Setup Godot build cache
-        uses: ./.github/actions/godot-cache
-        with:
-          cache-name: ${{ matrix.cache-name }}
-        continue-on-error: true
 
       - name: Setup python and scons
         uses: ./.github/actions/godot-deps
@@ -102,18 +89,18 @@ jobs:
       - name: Generate C# glue
         if: ${{ matrix.build-mono }}
         run: |
-          ${{ matrix.bin }} --headless --generate-mono-glue ./godot/modules/mono/glue
+          ${{ matrix.bin }} --headless --generate-mono-glue ./modules/mono/glue
 
       - name: Build .NET solutions
         if: ${{ matrix.build-mono }}
         run: |
-          ./godot/modules/mono/build_scripts/build_assemblies.py --godot-output-dir=./godot/bin --godot-platform=linuxbsd
+          ./modules/mono/build_scripts/build_assemblies.py --godot-output-dir=./bin --godot-platform=linuxbsd
 
       - name: Prepare artifact
         if: ${{ matrix.artifact }}
         run: |
-          strip godot/bin/godot.*
-          chmod +x godot/bin/godot.*
+          strip bin/godot.*
+          chmod +x bin/godot.*
 
       - name: Upload artifact
         uses: ./.github/actions/upload-artifact
@@ -121,11 +108,6 @@ jobs:
         with:
           name: ${{ matrix.cache-name }}
 
-      - name: Dump Godot API
-        uses: ./.github/actions/godot-api-dump
-        if: ${{ matrix.api-dump }}
-        with:
-          bin: ${{ matrix.bin }}
 
       # Execute unit tests for the editor
       - name: Unit tests
@@ -138,7 +120,7 @@ jobs:
       - name: .NET source generators tests
         if: ${{ matrix.build-mono }}
         run: |
-          dotnet test godot/modules/mono/editor/Godot.NET.Sdk/Godot.SourceGenerators.Tests
+          dotnet test modules/mono/editor/Godot.NET.Sdk/Godot.SourceGenerators.Tests
 
       # Check class reference
       - name: Check for class reference updates
@@ -153,7 +135,7 @@ jobs:
       - name: Check for GDExtension compatibility
         if: ${{ matrix.api-compat }}
         run: |
-          ./godot/misc/scripts/validate_extension_api.sh "${{ matrix.bin }}"
+          ./misc/scripts/validate_extension_api.sh "${{ matrix.bin }}"
 
       # Download and run the test project
       - name: Test Godot project

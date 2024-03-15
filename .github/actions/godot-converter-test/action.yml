@@ -10,7 +10,6 @@ runs:
     - name: Test 3-to-4 conversion
       shell: sh
       run: |
-        cd godot
         mkdir converter_test
         cd converter_test
         touch project.godot
