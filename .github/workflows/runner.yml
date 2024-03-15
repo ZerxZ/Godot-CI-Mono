@@ -31,6 +31,7 @@ jobs:
           zip -r godot.zip .
           mv godot.zip ..
           cd ..
+          chmod +x godot.zip
       - name: Upload Godot Source Code Artifact
         uses: actions/upload-artifact@v2
         with:

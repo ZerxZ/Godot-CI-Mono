@@ -34,9 +34,11 @@ jobs:
         uses: actions/download-artifact@v4.1.4
         with:
           name: godot-source
-          path: ./
+      - name: Display structure of downloaded files
+        run: ls -R
       - name: Unzip Godot
         run: |
+          chmod +x godot.zip
           unzip godot.zip -d ./godot
           mv godot/* ./
       - name: Setup python and scons
