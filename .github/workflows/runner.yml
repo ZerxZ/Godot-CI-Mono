@@ -13,10 +13,10 @@ jobs:
     name: 📦 Clone Godot
     runs-on: ubuntu-latest
     steps:
-      - uses: sudosubin/git-clone-action@lastest
+      - uses: sudosubin/git-clone-action@v1.0.1
         with:
-          repository: godotengine/godot
-          platform: github
+          repository: 'godotengine/godot'
+          platform: 'github'
 
   linux-build:
     if: ${{ vars.DISABLE_GODOT_CI == '' }}
