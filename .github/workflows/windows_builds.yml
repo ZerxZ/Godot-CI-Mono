@@ -44,8 +44,14 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+      - name: Download Dict
+        uses: actions/download-artifact@v4.1.2
+        with:
+         name: "godot-source"
+         path: "./"
       - name: Godot Engine Folder
         run: |
+           Expand-Archive -Path godot.zip -DestinationPath ./godot
            cd godot
 
       - name: Setup Godot build cache
