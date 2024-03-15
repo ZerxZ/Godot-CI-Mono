@@ -13,7 +13,7 @@ jobs:
     name: 📦 Clone Godot
     runs-on: ubuntu-latest
     steps:
-      - uses: sudosubin/git-clone-action@v1
+      - uses: sudosubin/git-clone-action@lastest
         with:
           repository: godotengine/godot
           platform: github
