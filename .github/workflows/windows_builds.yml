@@ -83,20 +83,21 @@ jobs:
       - name: Generate C# glue
         if: ${{ matrix.build-mono }}
         run: |
-          ${{ matrix.bin }} --headless --generate-mono-glue ./modules/mono/glue
+          ${{ matrix.bin }} --headless --generate-mono-glue ./godot/modules/mono/glue
 
       - name: Build .NET solutions
         if: ${{ matrix.build-mono }}
-        run: python ./modules/mono/build_scripts/build_assemblies.py --godot-output-dir=./bin --godot-platform=windows
+        run: python ./godot/modules/mono/build_scripts/build_assemblies.py --godot-output-dir=./godot/bin --godot-platform=windows
 
       - name: Prepare artifact
         run: |
-          Remove-Item bin/* -Include *.exp,*.lib,*.pdb -Force
+          Remove-Item godot/bin/* -Include *.exp,*.lib,*.pdb -Force
 
       - name: Upload artifact
         uses: ./.github/actions/upload-artifact
         with:
           name: ${{ matrix.cache-name }}
+          
 
       # Execute unit tests for the editor
       - name: Unit tests
