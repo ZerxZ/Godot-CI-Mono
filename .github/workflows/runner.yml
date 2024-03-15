@@ -9,28 +9,9 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  clone-godot-repo:
-    name: 📦 Clone Godot
-    runs-on: ubuntu-latest
-    steps:
-      - uses: sudosubin/git-clone-action@v1.0.1
-        with:
-          repository: 'godotengine/godot'
-          platform: 'github'
-          path: 'godot'
-      - name: Zip
-        run: |
-          zip -r "godot.zip" "godot"
-      - name: Upload a Dict Artifact
-        uses: actions/upload-artifact@v4.3.1
-        with: 
-         name: "godot-source"
-         path: "godot.zip"
-         retention-days: 7
+ 
 
   linux-build:
-    if: ${{ vars.DISABLE_GODOT_CI == '' }}
-    needs: clone-godot-repo
     name: 🐧 Linux
     uses: ./.github/workflows/linux_builds.yml
 
@@ -40,8 +21,6 @@ jobs:
 #    uses: ./.github/workflows/macos_builds.yml
 
   windows-build:
-    if: ${{ vars.DISABLE_GODOT_CI == '' }}
-    needs: clone-godot-repo
     name: 🏁 Windows
     uses: ./.github/workflows/windows_builds.yml
 
