@@ -18,6 +18,15 @@ jobs:
           repository: 'godotengine/godot'
           platform: 'github'
           path: 'godot'
+      - name: Zip
+        run: |
+          zip -r "godot.zip" "godot"
+      - name: Upload a Dict Artifact
+        uses: actions/upload-artifact@v4.3.1
+        with: 
+         name: "godot-source"
+         path: "godot.zip"
+         retention-days: 7
 
   linux-build:
     if: ${{ vars.DISABLE_GODOT_CI == '' }}
