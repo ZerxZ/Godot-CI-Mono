@@ -27,7 +27,7 @@ jobs:
             cache-name: linux-editor-mono
             target: editor
             sconsflags: module_mono_enabled=yes
-            bin: "./bin/godot.linuxbsd.editor.x86_64.mono"
+            bin: "./godot/bin/godot.linuxbsd.editor.x86_64.mono"
             build-mono: true
             tests: false # Disabled due freeze caused by mix Mono build and CI
             doc-test: true
@@ -47,6 +47,11 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+      - uses: sudosubin/git-clone-action@v1.0.1
+        with:
+          repository: 'godotengine/godot'
+          platform: 'github'
+          path: 'godot'
 
       # Need newer mesa for lavapipe to work properly.
       - name: Linux dependencies for tests
@@ -97,18 +102,18 @@ jobs:
       - name: Generate C# glue
         if: ${{ matrix.build-mono }}
         run: |
-          ${{ matrix.bin }} --headless --generate-mono-glue ./modules/mono/glue
+          ${{ matrix.bin }} --headless --generate-mono-glue ./godot/modules/mono/glue
 
       - name: Build .NET solutions
         if: ${{ matrix.build-mono }}
         run: |
-          ./modules/mono/build_scripts/build_assemblies.py --godot-output-dir=./bin --godot-platform=linuxbsd
+          ./godot/modules/mono/build_scripts/build_assemblies.py --godot-output-dir=./godot/bin --godot-platform=linuxbsd
 
       - name: Prepare artifact
         if: ${{ matrix.artifact }}
         run: |
-          strip bin/godot.*
-          chmod +x bin/godot.*
+          strip godot/bin/godot.*
+          chmod +x godot/bin/godot.*
 
       - name: Upload artifact
         uses: ./.github/actions/upload-artifact
@@ -133,7 +138,7 @@ jobs:
       - name: .NET source generators tests
         if: ${{ matrix.build-mono }}
         run: |
-          dotnet test modules/mono/editor/Godot.NET.Sdk/Godot.SourceGenerators.Tests
+          dotnet test godot/modules/mono/editor/Godot.NET.Sdk/Godot.SourceGenerators.Tests
 
       # Check class reference
       - name: Check for class reference updates
@@ -148,7 +153,7 @@ jobs:
       - name: Check for GDExtension compatibility
         if: ${{ matrix.api-compat }}
         run: |
-          ./misc/scripts/validate_extension_api.sh "${{ matrix.bin }}"
+          ./godot/misc/scripts/validate_extension_api.sh "${{ matrix.bin }}"
 
       # Download and run the test project
       - name: Test Godot project
