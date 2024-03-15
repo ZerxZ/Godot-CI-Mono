@@ -44,15 +44,17 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-      - name: Download Dict
-        uses: actions/download-artifact@v4.1.2
+      - uses: sudosubin/git-clone-action@v1.0.1
         with:
-         name: "godot-source"
-         path: "./"
+          repository: 'godotengine/godot'
+          platform: 'github'
+          path: 'godot'
       - name: Godot Engine Folder
         run: |
-           Expand-Archive -Path godot.zip -DestinationPath ./godot
-           cd godot
+           Remove-Item godot/.git -Force -Recurse
+           Remove-Item godot/.github -Force -Recurse
+           Move-Item -Path godot -Destination ./
+           
 
       - name: Setup Godot build cache
         uses: ./.github/actions/godot-cache
