@@ -68,7 +68,8 @@ jobs:
           path: ./
       - name: Unzip Godot
         run: |
-          unzip godot.zip -d ./
+          unzip godot.zip -d ./godot
+          mv godot/* ./
           
       - name: Setup python and scons
         uses: ./.github/actions/godot-deps

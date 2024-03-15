@@ -44,7 +44,8 @@ jobs:
           path: ./
       - name: Unzip Godot
         run: |
-          Expand-Archive -Path godot.zip -DestinationPath ./
+          Expand-Archive -Path godot.zip -DestinationPath ./godot -Force
+          Move-Item -Path ./godot/* -Destination ./ -Force 
           
       - name: Setup python and scons
         uses: ./.github/actions/godot-deps
