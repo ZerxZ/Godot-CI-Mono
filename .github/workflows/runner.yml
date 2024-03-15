@@ -17,6 +17,7 @@ jobs:
         with:
           repository: 'godotengine/godot'
           platform: 'github'
+          path: 'godot'
 
   linux-build:
     if: ${{ vars.DISABLE_GODOT_CI == '' }}
