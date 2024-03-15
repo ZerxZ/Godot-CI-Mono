@@ -44,5 +44,6 @@ runs:
           export BUILD_NAME="gh"
         fi
 
+        cd godot
         scons platform=${{ inputs.platform }} target=${{ inputs.target }} tests=${{ inputs.tests }} ${{ env.SCONSFLAGS }}
         ls -l bin/
