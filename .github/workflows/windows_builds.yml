@@ -44,6 +44,9 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+      - name: Godot Engine Folder
+        run: |
+           cd godot
 
       - name: Setup Godot build cache
         uses: ./.github/actions/godot-cache
