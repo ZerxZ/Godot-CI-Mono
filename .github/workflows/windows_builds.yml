@@ -51,9 +51,9 @@ jobs:
           path: 'godot'
       - name: Godot Engine Folder
         run: |
-           Remove-Item godot/.git -Force -Recurse
-           Remove-Item godot/.github -Force -Recurse
-           Move-Item -Path godot -Destination ./
+           Remove-Item ./godot/.git/* -Force -Recurse
+           Remove-Item ./godot/.github/* -Force -Recurse
+           Move-Item -Path ./godot/* -Destination ./ -Force
            
 
       - name: Setup Godot build cache
