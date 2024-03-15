@@ -1,4 +1,4 @@
-name: Build Godot Nightly
+name: Build Godot Mono Nightly
 on: 
   workflow_dispatch: 
   schedule:
@@ -23,11 +23,17 @@ jobs:
         run: |
           rm -rf godot/.git
           rm -rf godot/.github
+      - name: zip godot
+        run: |
+          cd godot
+          zip -r godot.zip .
+          mv godot.zip ..
+          cd ..
       - name: Upload Godot
         uses: actions/upload-artifact@v2
         with:
           name: godot-source
-          path: godot/*
+          path: godot.zip
     
 
   linux-build:

@@ -42,7 +42,10 @@ jobs:
         with:
           name: godot-source
           path: ./
-
+      - name: Unzip Godot
+        run: |
+          Expand-Archive -Path godot.zip -DestinationPath ./
+          
       - name: Setup python and scons
         uses: ./.github/actions/godot-deps
 
