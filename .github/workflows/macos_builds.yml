@@ -65,6 +65,10 @@ jobs:
           platform: macos
           target: ${{ matrix.target }}
           tests: ${{ matrix.tests }}
+      - name: Prepare artifact
+        run: |
+          strip bin/godot.*
+          chmod +x bin/godot.*
       - name: Generate C# glue
         if: ${{ matrix.build-mono }}
         run: |
@@ -74,10 +78,7 @@ jobs:
         if: ${{ matrix.build-mono }}
         run: |
           ./modules/mono/build_scripts/build_assemblies.py --godot-output-dir=./bin --godot-platform=macos
-      - name: Prepare artifact
-        run: |
-          strip bin/godot.*
-          chmod +x bin/godot.*
+
 
       - name: Upload artifact
         uses: ./.github/actions/upload-artifact
