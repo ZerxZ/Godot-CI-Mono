@@ -112,6 +112,8 @@ jobs:
         run: |
           strip bin/godot.*
           chmod +x bin/godot.*
+          cd bin
+          zip -r ${{ matrix.cache-name }}.zip .
 
       - name: Upload artifact
         uses: ./.github/actions/upload-artifact
