@@ -35,7 +35,7 @@ jobs:
             api-compat: true
             artifact: true
           - name: Editor w/ Mono (target=editor , arch=arm64)
-            cache-name: linux-editor-mono
+            cache-name: linux-editor-mono-arm64
             target: editor
             sconsflags: arch=arm64
             bin: "./bin/godot.linuxbsd.editor.arm64.mono"
