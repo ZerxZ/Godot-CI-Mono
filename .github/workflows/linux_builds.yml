@@ -6,7 +6,7 @@ on:
 env:
   # Used for the cache key. Add version suffix to force clean build.
   GODOT_BASE_BRANCH: master
-  SCONSFLAGS: verbose=yes warnings=extra werror=yes module_text_server_fb_enabled=yes
+  SCONSFLAGS: verbose=yes warnings=extra werror=yes module_text_server_fb_enabled=yes  module_mono_enabled=yes
   DOTNET_NOLOGO: true
   DOTNET_CLI_TELEMETRY_OPTOUT: true
   TSAN_OPTIONS: suppressions=misc/error_suppressions/tsan.txt
@@ -23,10 +23,10 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - name: Editor w/ Mono (target=editor)
-            cache-name: linux-editor-mono
+          - name: Editor w/ Mono (target=editor , arch=x86_64)
+            cache-name: linux-editor-mono-x86_64
             target: editor
-            sconsflags: module_mono_enabled=yes
+            sconsflags: arch=x86_64
             bin: "./bin/godot.linuxbsd.editor.x86_64.mono"
             build-mono: true
             tests: false # Disabled due freeze caused by mix Mono build and CI
@@ -34,6 +34,18 @@ jobs:
             proj-conv: true
             api-compat: true
             artifact: true
+          - name: Editor w/ Mono (target=editor , arch=arm64)
+            cache-name: linux-editor-mono
+            target: editor
+            sconsflags: arch=arm64
+            bin: "./bin/godot.linuxbsd.editor.arm64.mono"
+            build-mono: true
+            tests: false # Disabled due freeze caused by mix Mono build and CI
+            doc-test: true
+            proj-conv: true
+            api-compat: true
+            artifact: true
+
 
 
 
