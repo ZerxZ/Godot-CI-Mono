@@ -47,10 +47,10 @@ jobs:
     name: 🐧 Linux
     uses: ./.github/workflows/linux_builds.yml
   
-  macos-build:
-    needs: git-clone
-    name: 🍎 macOS
-    uses: ./.github/workflows/macos_builds.yml
+#  macos-build:
+#    needs: git-clone
+#    name: 🍎 macOS
+#    uses: ./.github/workflows/macos_builds.yml
 
   windows-build:
     needs: git-clone
@@ -58,7 +58,7 @@ jobs:
     uses: ./.github/workflows/windows_builds.yml
   
   release:
-    needs: [ linux-build, windows-build,macos-build ]
+    needs: [ linux-build, windows-build ]
     name: 🚀 Release
     runs-on: ubuntu-latest
     steps:
