@@ -43,6 +43,16 @@ jobs:
           name: godot-source
       - name: Display structure of downloaded files
         run: ls -R
+      - name: echo info
+        shell: pwsh
+        run: |
+          $gccExe = ((Get-Command gcc).Source)
+          echo "gcc: $gccExe"
+          echo "---- `$PATH ----"
+          echo $env:PATH
+          echo "---------------"
+          Get-ChildItem "$gccExe\.."
+          gcc -v
       - name: Unzip Godot
         run: |
           Expand-Archive -Path godot.zip -DestinationPath ./godot -Force
