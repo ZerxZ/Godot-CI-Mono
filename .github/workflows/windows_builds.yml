@@ -7,7 +7,7 @@ on:
 env:
   # Used for the cache key. Add version suffix to force clean build.
   GODOT_BASE_BRANCH: master
-  SCONSFLAGS: verbose=yes warnings=extra werror=yes module_text_server_fb_enabled=yes d3d12=yes module_mono_enabled=yes debug_symbols=no vsproj=yes vsproj_gen_only=no windows_subsystem=console
+  SCONSFLAGS: verbose=yes warnings=extra werror=yes module_text_server_fb_enabled=yes d3d12=yes module_mono_enabled=yes debug_symbols=no vsproj=yes vsproj_gen_only=no windows_subsystem=console  use_mingw=yes
   DOTNET_NOLOGO: true
   DOTNET_CLI_TELEMETRY_OPTOUT: true
   SCONS_CACHE_MSVC_CONFIG: true
@@ -43,16 +43,6 @@ jobs:
           name: godot-source
       - name: Display structure of downloaded files
         run: ls -R
-      - name: echo info
-        shell: pwsh
-        run: |
-          $gccExe = ((Get-Command gcc).Source)
-          echo "gcc: $gccExe"
-          echo "---- `$PATH ----"
-          echo $env:PATH
-          echo "---------------"
-          Get-ChildItem "$gccExe\.."
-          gcc -v
       - name: Unzip Godot
         run: |
           Expand-Archive -Path godot.zip -DestinationPath ./godot -Force
