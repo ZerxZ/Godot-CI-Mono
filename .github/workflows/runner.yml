@@ -86,7 +86,7 @@ jobs:
       env:
           RELEASE_VERSION: ${{ steps.release-selector.outputs.RELEASE_VERSION }}
       with:
-          automatic_release_tag: "${{ env.RELEASE_VERSION }}"
+          tag: "mono.${{ env.RELEASE_VERSION }}"
           prerelease: false
           name: "Godot Mono Release ${{ env.RELEASE_VERSION }}"
           allowUpdates: true
