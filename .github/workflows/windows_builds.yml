@@ -25,7 +25,6 @@ jobs:
       fail-fast: false
       matrix:
         include:
-
           - name: Editor w/ Mono (target=editor, tests=yes , arch=x86_64)
             cache-name: windows-editor-mono-win64
             target: editor
@@ -34,6 +33,11 @@ jobs:
             sconsflags:  arch=x86_64
             bin: "./bin/godot.windows.editor.x86_64.mono.exe"
             build-mono: true
+          - name: Template (target=template_release)
+            cache-name: windows-template
+            target: template_release
+            tests: false
+            sconsflags: debug_symbols=no
 
     steps:
       - uses: actions/checkout@v4.1.1
