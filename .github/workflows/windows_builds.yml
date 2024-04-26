@@ -33,8 +33,8 @@ jobs:
             sconsflags:  arch=x86_64
             bin: "./bin/godot.windows.editor.x86_64.mono.exe"
             build-mono: true
-          - name: Template (target=template_release)
-            cache-name: windows-template
+          - name: Template (target=template_release, arch=x86_64)
+            cache-name: windows-template-mono-win64
             target: template_release
             build-mono: false
             tests: false

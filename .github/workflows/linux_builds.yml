@@ -51,11 +51,13 @@ jobs:
             target: template_release
             build-mono: false
             tests: false
+            artifact: true
             sconsflags: arch=x86_64
           - name: Template w/ Mono (target=template_release, arch=arm64)
             cache-name: linux-template-mono-arm64
             target: template_release
             build-mono: false
+            artifact: true
             tests: false
             sconsflags: arch=arm64
 
