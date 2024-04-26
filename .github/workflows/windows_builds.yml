@@ -36,8 +36,9 @@ jobs:
           - name: Template (target=template_release)
             cache-name: windows-template
             target: template_release
+            build-mono: false
             tests: false
-            sconsflags: debug_symbols=no
+            sconsflags: debug_symbols=no arch=x86_64
 
     steps:
       - uses: actions/checkout@v4.1.1
