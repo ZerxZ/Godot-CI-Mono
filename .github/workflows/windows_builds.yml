@@ -26,7 +26,7 @@ jobs:
       matrix:
         include:
           - name: Editor w/ Mono (target=editor, tests=yes , arch=x86_64)
-            cache-name: windows-editor-mono-win64
+            cache-name: editor-windows-mono-win64
             target: editor
             tests: true
             # Skip debug symbols, they're way too big with MSVC.
@@ -34,7 +34,7 @@ jobs:
             bin: "./bin/godot.windows.editor.x86_64.mono.exe"
             build-mono: true
           - name: Template (target=template_release, arch=x86_64)
-            cache-name: windows-template-mono-win64
+            cache-name: template-windows-mono-win64
             target: template_release
             build-mono: false
             tests: false
