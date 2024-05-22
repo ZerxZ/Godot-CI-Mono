@@ -18,10 +18,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4.1.1
-      - uses: sudosubin/git-clone-action@v1.0.1
+      - name: Checkout godot-cpp
+        uses: actions/checkout@v4
         with:
-          repository: 'godotengine/godot'
-          platform: 'github'
+          repository: godotengine/godot
+          ref: master
+          submodules: 'recursive'
           path: 'godot'
       - name: Remove Godot .git and .github
         run: |
